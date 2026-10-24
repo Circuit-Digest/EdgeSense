@@ -1,0 +1,9 @@
+﻿# EdgeSense Studio Python Dependencies
+# Install with: pip install -r requirements.txt
+
+torch>=2.0.0
+numpy>=1.22.0
+PyQt5>=5.15.0
+pyserial>=3.5
+scikit-learn>=1.0.0
+onnx>=1.14.0

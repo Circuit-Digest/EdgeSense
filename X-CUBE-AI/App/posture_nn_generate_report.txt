@@ -1,0 +1,209 @@
+ST Edge AI Core v2.2.0-20266 2adc00962
+Created date          : 2026-10-24 15:27:00
+Parameters            : generate --target stm32h5 --name posture_nn -m C:\Users\sdham\Documents\Work_Semicon\DigikeyMaker\EdgeSense\CODE\EdgeSense\Tools\Studio\..\..\Models\posture_nn_model.onnx --c-api st-ai --compression none --no-workspace --output C:\Users\sdham\Documents\Work_Semicon\DigikeyMaker\EdgeSense\CODE\EdgeSense\Tools\Studio\..\..\X-CUBE-AI\App
+
+Exec/report summary (generate)
+----------------------------------------------------------------------------------------------------------------------------------
+model file         :   C:\Users\sdham\Documents\Work_Semicon\DigikeyMaker\EdgeSense\CODE\EdgeSense\Models\posture_nn_model.onnx   
+type               :   onnx                                                                                                       
+c_name             :   posture_nn                                                                                                 
+compression        :   none                                                                                                       
+options            :   allocate-inputs, allocate-outputs, use-lite-runtime, use-st-ai                                             
+optimization       :   balanced                                                                                                   
+target/series      :   stm32h5                                                                                                    
+workspace dir      :   C:\Users\sdham\AppData\Local\Temp\stedgeai_workspace                                                       
+output dir         :   C:\Users\sdham\Documents\Work_Semicon\DigikeyMaker\EdgeSense\CODE\EdgeSense\X-CUBE-AI\App                  
+model_fmt          :   float                                                                                                      
+model_name         :   posture_nn_model                                                                                           
+model_hash         :   0xbd2f37666aff708ae63f6df9fb8717fb                                                                         
+params #           :   2,686 items (10.49 KiB)                                                                                    
+----------------------------------------------------------------------------------------------------------------------------------
+input 1/1          :   'input_posture', f32(1x2x8x8), 512 Bytes, activations                                                      
+output 1/1         :   'output_logits', f32(1x6), 24 Bytes, activations                                                           
+macc               :   8,434                                                                                                      
+weights (ro)       :   10,744 B (10.49 KiB) (1 segment)                                                                           
+activations (rw)   :   1,672 B (1.63 KiB) (1 segment) *                                                                           
+ram (total)        :   1,672 B (1.63 KiB) = 1,672 + 0 + 0                                                                         
+----------------------------------------------------------------------------------------------------------------------------------
+(*) 'input'/'output' buffers are allocated in the activations buffer
+
+Model name - posture_nn_model
+------ ------------------------------------------- ------------------- ------------- ------- ------------------------ --- --------------- ----------------- -------------------------------- 
+m_id   layer (type,original)                       oshape              param/size       macc             connected to   | c_size          c_macc            c_type                           
+------ ------------------------------------------- ------------------- ------------- ------- ------------------------ --- --------------- ----------------- -------------------------------- 
+5      fc1_weight (Placeholder, Gemm)              [b:32,c:72]         2,304/9,216                                      | +128(+1.4%)     +2,336(+100.0%)   Dense_[5]                        
+       fc1_bias (Placeholder, Gemm)                [b:32]              32/128                                           | -128(-100.0%)                     
+------ ------------------------------------------- ------------------- ------------- ------- ------------------------ --- --------------- ----------------- -------------------------------- 
+7      fc2_weight (Placeholder, Gemm)              [b:6,c:32]          192/768                                          | +24(+3.1%)      +198(+100.0%)     Dense_[o][7]                     
+       fc2_bias (Placeholder, Gemm)                [b:6]               6/24                                             | -24(-100.0%)                      
+------ ------------------------------------------- ------------------- ------------- ------- ------------------------ --- --------------- ----------------- -------------------------------- 
+0      input_posture (Input, )                     [b:1,h:8,w:8,c:2]                                                    |                                   
+------ ------------------------------------------- ------------------- ------------- ------- ------------------------ --- --------------- ----------------- -------------------------------- 
+1      _conv_Conv_output_0 (Conv2D, Conv)          [b:1,h:6,w:6,c:8]   152/608         5,192            input_posture   |                                   Conv2D_[1]                       
+------ ------------------------------------------- ------------------- ------------- ------- ------------------------ --- --------------- ----------------- -------------------------------- 
+2      _relu1_Relu_output_0 (Nonlinearity, Relu)   [b:1,h:6,w:6,c:8]                     288      _conv_Conv_output_0   |                 +64(+22.2%)       Transpose_/Nonlinearity_[0, 2]   
+------ ------------------------------------------- ------------------- ------------- ------- ------------------------ --- --------------- ----------------- -------------------------------- 
+3      _pool_MaxPool_output_0 (Pool, MaxPool)      [b:1,h:3,w:3,c:8]                     288     _relu1_Relu_output_0   |                                   Pool_[3]                         
+------ ------------------------------------------- ------------------- ------------- ------- ------------------------ --- --------------- ----------------- -------------------------------- 
+4      _Flatten_output_0 (Reshape, Flatten)        [b:1,c:72]                                  _pool_MaxPool_output_0   |                 +36(+100.0%)      Transpose_[4]                    
+------ ------------------------------------------- ------------------- ------------- ------- ------------------------ --- --------------- ----------------- -------------------------------- 
+5      _fc1_Gemm_output_0 (Gemm, Gemm)             [b:1,c:32]                          2,336        _Flatten_output_0   |                 -2,336(-100.0%)   
+                                                                                                           fc1_weight   | 
+                                                                                                             fc1_bias   | 
+------ ------------------------------------------- ------------------- ------------- ------- ------------------------ --- --------------- ----------------- -------------------------------- 
+6      _relu2_Relu_output_0 (Nonlinearity, Relu)   [b:1,c:32]                             32       _fc1_Gemm_output_0   |                                   Nonlinearity_[6]                 
+------ ------------------------------------------- ------------------- ------------- ------- ------------------------ --- --------------- ----------------- -------------------------------- 
+7      output_logits (Gemm, Gemm)                  [b:1,c:6]                             198     _relu2_Relu_output_0   |                 -198(-100.0%)     
+                                                                                                           fc2_weight   | 
+                                                                                                             fc2_bias   | 
+------ ------------------------------------------- ------------------- ------------- ------- ------------------------ --- --------------- ----------------- -------------------------------- 
+model/c-model: macc=8,334/8,434 +100(+1.2%) weights=10,744/10,744  activations=--/1,672 io=--/0
+
+
+
+Generated C-graph summary
+------------------------------------------------------------------------------------------------------------------------
+model name            : posture_nn_model
+c-name                : posture_nn
+c-node #              : 8
+c-array #             : 16
+activations size      : 1672 (1 segment)
+weights size          : 10744 (1 segment)
+macc                  : 8434
+inputs                : ['input_posture_output']
+outputs               : ['output_logits_output']
+
+C-Arrays (16)
+------ ------------------------------------ ----------- ------------------------- ------------- --------- 
+c_id   name (*_array)                       item/size   domain/mem-pool           c-type        comment   
+------ ------------------------------------ ----------- ------------------------- ------------- --------- 
+0      _Flatten_output_0_to_chlast_output   72/288      activations/**default**   float                   
+1      _conv_Conv_output_0_bias             8/32        weights/weights           const float             
+2      _conv_Conv_output_0_output           288/1152    activations/**default**   float                   
+3      _conv_Conv_output_0_scratch0         18/72       activations/**default**   float                   
+4      _conv_Conv_output_0_weights          144/576     weights/weights           const float             
+5      _fc1_Gemm_output_0_bias              32/128      weights/weights           const float             
+6      _fc1_Gemm_output_0_output            32/128      activations/**default**   float                   
+7      _fc1_Gemm_output_0_weights           2304/9216   weights/weights           const float             
+8      _pool_MaxPool_output_0_output        72/288      activations/**default**   float                   
+9      _relu1_Relu_output_0_output          288/1152    activations/**default**   float                   
+10     _relu2_Relu_output_0_output          32/128      activations/**default**   float                   
+11     input_posture_Transpose_output       128/512     activations/**default**   float                   
+12     input_posture_output                 128/512     activations/**default**   float         /input    
+13     output_logits_bias                   6/24        weights/weights           const float             
+14     output_logits_output                 6/24        activations/**default**   float         /output   
+15     output_logits_weights                192/768     weights/weights           const float             
+------ ------------------------------------ ----------- ------------------------- ------------- --------- 
+
+C-Layers (8)
+------ ----------------------------- ---- --------------- ------ ------ --------------------------------------- ------------------- 
+c_id   name (*_layer)                id   layer_type      macc   rom    tensors                                 shape (array id)    
+------ ----------------------------- ---- --------------- ------ ------ --------------------------------------- ------------------- 
+0      input_posture_Transpose       2    Transpose       64     0      I: input_posture_output                 f32(1x2x8x8) (12)   
+                                                                        O: input_posture_Transpose_output       f32(1x8x8x2) (11)   
+------ ----------------------------- ---- --------------- ------ ------ --------------------------------------- ------------------- 
+1      _conv_Conv_output_0           1    Conv2D          5192   608    I: input_posture_Transpose_output       f32(1x8x8x2) (11)   
+                                                                        S: _conv_Conv_output_0_scratch0                             
+                                                                        W: _conv_Conv_output_0_weights          f32(8x3x3x2) (4)    
+                                                                        W: _conv_Conv_output_0_bias             f32(8) (1)          
+                                                                        O: _conv_Conv_output_0_output           f32(1x6x6x8) (2)    
+------ ----------------------------- ---- --------------- ------ ------ --------------------------------------- ------------------- 
+2      _relu1_Relu_output_0          2    Nonlinearity    288    0      I: _conv_Conv_output_0_output           f32(1x6x6x8) (2)    
+                                                                        O: _relu1_Relu_output_0_output          f32(1x6x6x8) (9)    
+------ ----------------------------- ---- --------------- ------ ------ --------------------------------------- ------------------- 
+3      _pool_MaxPool_output_0        3    Pool            288    0      I: _relu1_Relu_output_0_output          f32(1x6x6x8) (9)    
+                                                                        O: _pool_MaxPool_output_0_output        f32(1x3x3x8) (8)    
+------ ----------------------------- ---- --------------- ------ ------ --------------------------------------- ------------------- 
+4      _Flatten_output_0_to_chlast   4    Transpose       36     0      I: _pool_MaxPool_output_0_output        f32(1x3x3x8) (8)    
+                                                                        O: _Flatten_output_0_to_chlast_output   f32(1x8x3x3) (0)    
+------ ----------------------------- ---- --------------- ------ ------ --------------------------------------- ------------------- 
+5      _fc1_Gemm_output_0            5    Dense           2336   9344   I: _Flatten_output_0_to_chlast_output   f32(1x8x3x3) (0)    
+                                                                        W: _fc1_Gemm_output_0_weights           f32(32x72) (7)      
+                                                                        W: _fc1_Gemm_output_0_bias              f32(32) (5)         
+                                                                        O: _fc1_Gemm_output_0_output            f32(1x32) (6)       
+------ ----------------------------- ---- --------------- ------ ------ --------------------------------------- ------------------- 
+6      _relu2_Relu_output_0          6    Nonlinearity    32     0      I: _fc1_Gemm_output_0_output            f32(1x32) (6)       
+                                                                        O: _relu2_Relu_output_0_output          f32(1x32) (10)      
+------ ----------------------------- ---- --------------- ------ ------ --------------------------------------- ------------------- 
+7      output_logits                 7    Dense           198    792    I: _relu2_Relu_output_0_output          f32(1x32) (10)      
+                                                                        W: output_logits_weights                f32(6x32) (15)      
+                                                                        W: output_logits_bias                   f32(6) (13)         
+                                                                        O: output_logits_output                 f32(1x6) (14)       
+------ ----------------------------- ---- --------------- ------ ------ --------------------------------------- ------------------- 
+
+
+
+Number of operations per c-layer
+------- ------ ----------------------------------------- ------- -------------- 
+c_id    m_id   name (type)                                   #op           type 
+------- ------ ----------------------------------------- ------- -------------- 
+0       2      input_posture_Transpose (Transpose)            64   smul_f32_f32 
+1       1      _conv_Conv_output_0 (Conv2D)                5,192   smul_f32_f32 
+2       2      _relu1_Relu_output_0 (Nonlinearity)           288     op_f32_f32 
+3       3      _pool_MaxPool_output_0 (Pool)                 288   smul_f32_f32 
+4       4      _Flatten_output_0_to_chlast (Transpose)        36   smul_f32_f32 
+5       5      _fc1_Gemm_output_0 (Dense)                  2,336   smul_f32_f32 
+6       6      _relu2_Relu_output_0 (Nonlinearity)            32     op_f32_f32 
+7       7      output_logits (Dense)                         198   smul_f32_f32 
+------- ------ ----------------------------------------- ------- -------------- 
+total                                                      8,434 
+
+Number of operation types
+---------------- ------- ----------- 
+operation type         #           % 
+---------------- ------- ----------- 
+smul_f32_f32       8,114       96.2% 
+op_f32_f32           320        3.8% 
+
+Complexity report (model)
+------ ------------------------ ------------------------- ------------------------- -------- 
+m_id   name                     c_macc                    c_rom                     c_id     
+------ ------------------------ ------------------------- ------------------------- -------- 
+5      fc1_weight               |||||||           27.7%   ||||||||||||||||  87.0%   [5]      
+7      fc2_weight               |                  2.3%   ||                 7.4%   [7]      
+1      _conv_Conv_output_0      ||||||||||||||||  61.6%   |                  5.7%   [1]      
+2      _relu1_Relu_output_0     ||                 4.2%   |                  0.0%   [0, 2]   
+3      _pool_MaxPool_output_0   |                  3.4%   |                  0.0%   [3]      
+4      _Flatten_output_0        |                  0.4%   |                  0.0%   [4]      
+6      _relu2_Relu_output_0     |                  0.4%   |                  0.0%   [6]      
+------ ------------------------ ------------------------- ------------------------- -------- 
+macc=8,434 weights=10,744 act=1,672 ram_io=0
+ 
+ Requested memory size by section - "stm32h5" target
+ ------------------------------- ------- -------- ------ ------- 
+ module                             text   rodata   data     bss 
+ ------------------------------- ------- -------- ------ ------- 
+ NetworkRuntime1020_CM33_GCC.a     3,320        0      0       0 
+ posture_nn.o                      1,434       72    724      40 
+ lib (toolchain)*                      0        0      0       0 
+ ------------------------------- ------- -------- ------ ------- 
+ RT total**                        4,754       72    724      40 
+ ------------------------------- ------- -------- ------ ------- 
+ weights                               0   10,744      0       0 
+ activations                           0        0      0   1,672 
+ states                                0        0      0       0 
+ io                                    0        0      0       0 
+ ------------------------------- ------- -------- ------ ------- 
+ TOTAL                             4,754   10,816    724   1,712 
+ ------------------------------- ------- -------- ------ ------- 
+ *  toolchain objects (libm/libgcc*)
+ ** RT AI runtime objects (kernels+infrastructure)
+  
+  Summary - "stm32h5" target
+  ---------------------------------------------------
+               FLASH (ro)      %*   RAM (rw)       % 
+  ---------------------------------------------------
+  RT total          5,550   34.1%        764   31.4% 
+  ---------------------------------------------------
+  TOTAL            16,294              2,436         
+  ---------------------------------------------------
+  *  rt/total
+
+
+Generated files (5)
+---------------------------------------------------------------------------------------------------------------- 
+C:\Users\sdham\Documents\Work_Semicon\DigikeyMaker\EdgeSense\CODE\EdgeSense\X-CUBE-AI\App\posture_nn_data.h      
+C:\Users\sdham\Documents\Work_Semicon\DigikeyMaker\EdgeSense\CODE\EdgeSense\X-CUBE-AI\App\posture_nn_data.c      
+C:\Users\sdham\Documents\Work_Semicon\DigikeyMaker\EdgeSense\CODE\EdgeSense\X-CUBE-AI\App\posture_nn.h           
+C:\Users\sdham\Documents\Work_Semicon\DigikeyMaker\EdgeSense\CODE\EdgeSense\X-CUBE-AI\App\posture_nn.c           
+C:\Users\sdham\Documents\Work_Semicon\DigikeyMaker\EdgeSense\CODE\EdgeSense\X-CUBE-AI\App\posture_nn_details.h   

@@ -1,0 +1,56 @@
+﻿# ==============================================================================
+# EdgeSense Git Ignore Configuration
+# ==============================================================================
+
+# --- Embedded Build Outputs (STM32CubeIDE / GCC) ---
+Debug/
+Release/
+*.o
+*.d
+*.su
+*.cyclo
+*.elf
+*.bin
+*.hex
+*.map
+*.list
+*.stdout
+*.axf
+
+# --- ST Edge AI Workspace Artifacts ---
+st_ai_ws/
+**/st_ai_ws/
+
+# --- Eclipse CDT User Settings ---
+.settings/language.settings.xml
+
+# --- Python Cache & Virtual Environments ---
+__pycache__/
+*.py[cod]
+*.class
+*.pyd
+.venv/
+venv/
+ENV/
+env/
+
+# --- KiCad EDA Temporary Files ---
+*.kicad_prl
+*-save.kicad_pcb
+*-save.kicad_sch
+*.bak
+*.kicad_pcb-bak
+*.kicad_sch-bak
+_autosave-*
+*.lck
+*-backups/
+_restore_backup_*/
+.history/
+fp-info-cache
+*.net
+
+# --- Operating System Artifacts ---
+.DS_Store
+Thumbs.db
+ehthumbs.db
+[Dd]esktop.ini

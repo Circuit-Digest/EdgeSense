@@ -1,0 +1,239 @@
+ST Edge AI Core v2.2.0-20266 2adc00962
+Created date          : 2026-10-24 15:26:40
+Parameters            : generate --target stm32h5 --name gesture_nn -m C:\Users\sdham\Documents\Work_Semicon\DigikeyMaker\EdgeSense\CODE\EdgeSense\Tools\Studio\..\..\Models\gesture_nn_model.onnx --c-api st-ai --compression none --no-workspace --output C:\Users\sdham\Documents\Work_Semicon\DigikeyMaker\EdgeSense\CODE\EdgeSense\Tools\Studio\..\..\X-CUBE-AI\App
+
+Exec/report summary (generate)
+----------------------------------------------------------------------------------------------------------------------------------
+model file         :   C:\Users\sdham\Documents\Work_Semicon\DigikeyMaker\EdgeSense\CODE\EdgeSense\Models\gesture_nn_model.onnx   
+type               :   onnx                                                                                                       
+c_name             :   gesture_nn                                                                                                 
+compression        :   none                                                                                                       
+options            :   allocate-inputs, allocate-outputs, use-lite-runtime, use-st-ai                                             
+optimization       :   balanced                                                                                                   
+target/series      :   stm32h5                                                                                                    
+workspace dir      :   C:\Users\sdham\AppData\Local\Temp\stedgeai_workspace                                                       
+output dir         :   C:\Users\sdham\Documents\Work_Semicon\DigikeyMaker\EdgeSense\CODE\EdgeSense\X-CUBE-AI\App                  
+model_fmt          :   float                                                                                                      
+model_name         :   gesture_nn_model                                                                                           
+model_hash         :   0x2a9e4e894d0440d4e9c3e16c1a69dc18                                                                         
+params #           :   11,109 items (43.39 KiB)                                                                                   
+----------------------------------------------------------------------------------------------------------------------------------
+input 1/1          :   'input', f32(1x15x8x8), 3.75 KBytes, activations                                                           
+output 1/1         :   'output', f32(1x5), 20 Bytes, activations                                                                  
+macc               :   219,957                                                                                                    
+weights (ro)       :   44,436 B (43.39 KiB) (1 segment)                                                                           
+activations (rw)   :   7,680 B (7.50 KiB) (1 segment) *                                                                           
+ram (total)        :   7,680 B (7.50 KiB) = 7,680 + 0 + 0                                                                         
+----------------------------------------------------------------------------------------------------------------------------------
+(*) 'input'/'output' buffers are allocated in the activations buffer
+
+Model name - gesture_nn_model
+------ ------------------------------------------------- -------------------- -------------- --------- ----------------------------- --- --------------- ----------------- -------------------------------- 
+m_id   layer (type,original)                             oshape               param/size          macc                  connected to   | c_size          c_macc            c_type                           
+------ ------------------------------------------------- -------------------- -------------- --------- ----------------------------- --- --------------- ----------------- -------------------------------- 
+8      fc1_weight (Placeholder, Gemm)                    [b:32,c:128]         4,096/16,384                                             | +128(+0.8%)     +4,128(+100.0%)   Dense_[8]                        
+       fc1_bias (Placeholder, Gemm)                      [b:32]               32/128                                                   | -128(-100.0%)                     
+------ ------------------------------------------------- -------------------- -------------- --------- ----------------------------- --- --------------- ----------------- -------------------------------- 
+10     fc2_weight (Placeholder, Gemm)                    [b:5,c:32]           160/640                                                  | +20(+3.1%)      +165(+100.0%)     Dense_[o][10]                    
+       fc2_bias (Placeholder, Gemm)                      [b:5]                5/20                                                     | -20(-100.0%)                      
+------ ------------------------------------------------- -------------------- -------------- --------- ----------------------------- --- --------------- ----------------- -------------------------------- 
+0      input (Input, )                                   [b:1,h:8,w:8,c:15]                                                            |                                   
+------ ------------------------------------------------- -------------------- -------------- --------- ----------------------------- --- --------------- ----------------- -------------------------------- 
+1      _conv1_Conv_output_0 (Conv2D, Conv)               [b:1,h:8,w:8,c:16]   2,176/8,704      138,256                         input   |                                   Conv2D_[1]                       
+------ ------------------------------------------------- -------------------- -------------- --------- ----------------------------- --- --------------- ----------------- -------------------------------- 
+2      _relu1_Relu_output_0 (Nonlinearity, Relu)         [b:1,h:8,w:8,c:16]                      1,024          _conv1_Conv_output_0   |                 +480(+46.9%)      Transpose_/Nonlinearity_[0, 2]   
+------ ------------------------------------------------- -------------------- -------------- --------- ----------------------------- --- --------------- ----------------- -------------------------------- 
+3      _pool1_MaxPool_output_0 (Pool, MaxPool)           [b:1,h:4,w:4,c:16]                      1,024          _relu1_Relu_output_0   |                                   Pool_[3]                         
+------ ------------------------------------------------- -------------------- -------------- --------- ----------------------------- --- --------------- ----------------- -------------------------------- 
+4      _conv2_Conv_output_0 (Conv2D, Conv)               [b:1,h:4,w:4,c:32]   4,640/18,560      73,760       _pool1_MaxPool_output_0   |                                   Conv2D_[4]                       
+------ ------------------------------------------------- -------------------- -------------- --------- ----------------------------- --- --------------- ----------------- -------------------------------- 
+5      _relu2_Relu_output_0 (Nonlinearity, Relu)         [b:1,h:4,w:4,c:32]                        512          _conv2_Conv_output_0   |                                   Nonlinearity_[5]                 
+------ ------------------------------------------------- -------------------- -------------- --------- ----------------------------- --- --------------- ----------------- -------------------------------- 
+6      _pool2_AveragePool_output_0 (Pool, AveragePool)   [b:1,h:2,w:2,c:32]                        512          _relu2_Relu_output_0   |                                   Pool_[6]                         
+------ ------------------------------------------------- -------------------- -------------- --------- ----------------------------- --- --------------- ----------------- -------------------------------- 
+7      _flatten_Flatten_output_0 (Reshape, Flatten)      [b:1,c:128]                                     _pool2_AveragePool_output_0   |                 +64(+100.0%)      Transpose_[7]                    
+------ ------------------------------------------------- -------------------- -------------- --------- ----------------------------- --- --------------- ----------------- -------------------------------- 
+8      _fc1_Gemm_output_0 (Gemm, Gemm)                   [b:1,c:32]                              4,128     _flatten_Flatten_output_0   |                 -4,128(-100.0%)   
+                                                                                                                          fc1_weight   | 
+                                                                                                                            fc1_bias   | 
+------ ------------------------------------------------- -------------------- -------------- --------- ----------------------------- --- --------------- ----------------- -------------------------------- 
+9      _relu3_Relu_output_0 (Nonlinearity, Relu)         [b:1,c:32]                                 32            _fc1_Gemm_output_0   |                                   Nonlinearity_[9]                 
+------ ------------------------------------------------- -------------------- -------------- --------- ----------------------------- --- --------------- ----------------- -------------------------------- 
+10     output (Gemm, Gemm)                               [b:1,c:5]                                 165          _relu3_Relu_output_0   |                 -165(-100.0%)     
+                                                                                                                          fc2_weight   | 
+                                                                                                                            fc2_bias   | 
+------ ------------------------------------------------- -------------------- -------------- --------- ----------------------------- --- --------------- ----------------- -------------------------------- 
+model/c-model: macc=219,413/219,957 +544(+0.2%) weights=44,436/44,436  activations=--/7,680 io=--/0
+
+
+
+Generated C-graph summary
+------------------------------------------------------------------------------------------------------------------------
+model name            : gesture_nn_model
+c-name                : gesture_nn
+c-node #              : 11
+c-array #             : 22
+activations size      : 7680 (1 segment)
+weights size          : 44436 (1 segment)
+macc                  : 219957
+inputs                : ['input_output']
+outputs               : ['output_output']
+
+C-Arrays (22)
+------ -------------------------------------------- ------------ ------------------------- ------------- --------- 
+c_id   name (*_array)                               item/size    domain/mem-pool           c-type        comment   
+------ -------------------------------------------- ------------ ------------------------- ------------- --------- 
+0      _conv1_Conv_output_0_bias                    16/64        weights/weights           const float             
+1      _conv1_Conv_output_0_output                  1024/4096    activations/**default**   float                   
+2      _conv1_Conv_output_0_scratch0                135/540      activations/**default**   float                   
+3      _conv1_Conv_output_0_weights                 2160/8640    weights/weights           const float             
+4      _conv2_Conv_output_0_bias                    32/128       weights/weights           const float             
+5      _conv2_Conv_output_0_output                  512/2048     activations/**default**   float                   
+6      _conv2_Conv_output_0_scratch0                144/576      activations/**default**   float                   
+7      _conv2_Conv_output_0_weights                 4608/18432   weights/weights           const float             
+8      _fc1_Gemm_output_0_bias                      32/128       weights/weights           const float             
+9      _fc1_Gemm_output_0_output                    32/128       activations/**default**   float                   
+10     _fc1_Gemm_output_0_weights                   4096/16384   weights/weights           const float             
+11     _flatten_Flatten_output_0_to_chlast_output   128/512      activations/**default**   float                   
+12     _pool1_MaxPool_output_0_output               256/1024     activations/**default**   float                   
+13     _pool2_AveragePool_output_0_output           128/512      activations/**default**   float                   
+14     _relu1_Relu_output_0_output                  1024/4096    activations/**default**   float                   
+15     _relu2_Relu_output_0_output                  512/2048     activations/**default**   float                   
+16     _relu3_Relu_output_0_output                  32/128       activations/**default**   float                   
+17     input_Transpose_output                       960/3840     activations/**default**   float                   
+18     input_output                                 960/3840     activations/**default**   float         /input    
+19     output_bias                                  5/20         weights/weights           const float             
+20     output_output                                5/20         activations/**default**   float         /output   
+21     output_weights                               160/640      weights/weights           const float             
+------ -------------------------------------------- ------------ ------------------------- ------------- --------- 
+
+C-Layers (11)
+------ ------------------------------------- ---- --------------- -------- ------- ----------------------------------------------- -------------------- 
+c_id   name (*_layer)                        id   layer_type      macc     rom     tensors                                         shape (array id)     
+------ ------------------------------------- ---- --------------- -------- ------- ----------------------------------------------- -------------------- 
+0      input_Transpose                       2    Transpose       480      0       I: input_output                                 f32(1x15x8x8) (18)   
+                                                                                   O: input_Transpose_output                       f32(1x8x8x15) (17)   
+------ ------------------------------------- ---- --------------- -------- ------- ----------------------------------------------- -------------------- 
+1      _conv1_Conv_output_0                  1    Conv2D          138256   8704    I: input_Transpose_output                       f32(1x8x8x15) (17)   
+                                                                                   S: _conv1_Conv_output_0_scratch0                                     
+                                                                                   W: _conv1_Conv_output_0_weights                 f32(16x3x3x15) (3)   
+                                                                                   W: _conv1_Conv_output_0_bias                    f32(16) (0)          
+                                                                                   O: _conv1_Conv_output_0_output                  f32(1x8x8x16) (1)    
+------ ------------------------------------- ---- --------------- -------- ------- ----------------------------------------------- -------------------- 
+2      _relu1_Relu_output_0                  2    Nonlinearity    1024     0       I: _conv1_Conv_output_0_output                  f32(1x8x8x16) (1)    
+                                                                                   O: _relu1_Relu_output_0_output                  f32(1x8x8x16) (14)   
+------ ------------------------------------- ---- --------------- -------- ------- ----------------------------------------------- -------------------- 
+3      _pool1_MaxPool_output_0               3    Pool            1024     0       I: _relu1_Relu_output_0_output                  f32(1x8x8x16) (14)   
+                                                                                   O: _pool1_MaxPool_output_0_output               f32(1x4x4x16) (12)   
+------ ------------------------------------- ---- --------------- -------- ------- ----------------------------------------------- -------------------- 
+4      _conv2_Conv_output_0                  4    Conv2D          73760    18560   I: _pool1_MaxPool_output_0_output               f32(1x4x4x16) (12)   
+                                                                                   S: _conv2_Conv_output_0_scratch0                                     
+                                                                                   W: _conv2_Conv_output_0_weights                 f32(32x3x3x16) (7)   
+                                                                                   W: _conv2_Conv_output_0_bias                    f32(32) (4)          
+                                                                                   O: _conv2_Conv_output_0_output                  f32(1x4x4x32) (5)    
+------ ------------------------------------- ---- --------------- -------- ------- ----------------------------------------------- -------------------- 
+5      _relu2_Relu_output_0                  5    Nonlinearity    512      0       I: _conv2_Conv_output_0_output                  f32(1x4x4x32) (5)    
+                                                                                   O: _relu2_Relu_output_0_output                  f32(1x4x4x32) (15)   
+------ ------------------------------------- ---- --------------- -------- ------- ----------------------------------------------- -------------------- 
+6      _pool2_AveragePool_output_0           6    Pool            512      0       I: _relu2_Relu_output_0_output                  f32(1x4x4x32) (15)   
+                                                                                   O: _pool2_AveragePool_output_0_output           f32(1x2x2x32) (13)   
+------ ------------------------------------- ---- --------------- -------- ------- ----------------------------------------------- -------------------- 
+7      _flatten_Flatten_output_0_to_chlast   7    Transpose       64       0       I: _pool2_AveragePool_output_0_output           f32(1x2x2x32) (13)   
+                                                                                   O: _flatten_Flatten_output_0_to_chlast_output   f32(1x32x2x2) (11)   
+------ ------------------------------------- ---- --------------- -------- ------- ----------------------------------------------- -------------------- 
+8      _fc1_Gemm_output_0                    8    Dense           4128     16512   I: _flatten_Flatten_output_0_to_chlast_output   f32(1x32x2x2) (11)   
+                                                                                   W: _fc1_Gemm_output_0_weights                   f32(32x128) (10)     
+                                                                                   W: _fc1_Gemm_output_0_bias                      f32(32) (8)          
+                                                                                   O: _fc1_Gemm_output_0_output                    f32(1x32) (9)        
+------ ------------------------------------- ---- --------------- -------- ------- ----------------------------------------------- -------------------- 
+9      _relu3_Relu_output_0                  9    Nonlinearity    32       0       I: _fc1_Gemm_output_0_output                    f32(1x32) (9)        
+                                                                                   O: _relu3_Relu_output_0_output                  f32(1x32) (16)       
+------ ------------------------------------- ---- --------------- -------- ------- ----------------------------------------------- -------------------- 
+10     output                                10   Dense           165      660     I: _relu3_Relu_output_0_output                  f32(1x32) (16)       
+                                                                                   W: output_weights                               f32(5x32) (21)       
+                                                                                   W: output_bias                                  f32(5) (19)          
+                                                                                   O: output_output                                f32(1x5) (20)        
+------ ------------------------------------- ---- --------------- -------- ------- ----------------------------------------------- -------------------- 
+
+
+
+Number of operations per c-layer
+------- ------ -------------------------------------------- --------- -------------- 
+c_id    m_id   name (type)                                        #op           type 
+------- ------ -------------------------------------------- --------- -------------- 
+0       2      input_Transpose (Transpose)                        480   smul_f32_f32 
+1       1      _conv1_Conv_output_0 (Conv2D)                  138,256   smul_f32_f32 
+2       2      _relu1_Relu_output_0 (Nonlinearity)              1,024     op_f32_f32 
+3       3      _pool1_MaxPool_output_0 (Pool)                   1,024   smul_f32_f32 
+4       4      _conv2_Conv_output_0 (Conv2D)                   73,760   smul_f32_f32 
+5       5      _relu2_Relu_output_0 (Nonlinearity)                512     op_f32_f32 
+6       6      _pool2_AveragePool_output_0 (Pool)                 512   smul_f32_f32 
+7       7      _flatten_Flatten_o.._to_chlast (Transpose)          64   smul_f32_f32 
+8       8      _fc1_Gemm_output_0 (Dense)                       4,128   smul_f32_f32 
+9       9      _relu3_Relu_output_0 (Nonlinearity)                 32     op_f32_f32 
+10      10     output (Dense)                                     165   smul_f32_f32 
+------- ------ -------------------------------------------- --------- -------------- 
+total                                                         219,957 
+
+Number of operation types
+---------------- --------- ----------- 
+operation type           #           % 
+---------------- --------- ----------- 
+smul_f32_f32       218,389       99.3% 
+op_f32_f32           1,568        0.7% 
+
+Complexity report (model)
+------ ----------------------------- ------------------------- ------------------------- -------- 
+m_id   name                          c_macc                    c_rom                     c_id     
+------ ----------------------------- ------------------------- ------------------------- -------- 
+8      fc1_weight                    |                  1.9%   ||||||||||||||    37.2%   [8]      
+10     fc2_weight                    |                  0.1%   |                  1.5%   [10]     
+1      _conv1_Conv_output_0          ||||||||||||||||  62.9%   ||||||||          19.6%   [1]      
+2      _relu1_Relu_output_0          |                  0.7%   |                  0.0%   [0, 2]   
+3      _pool1_MaxPool_output_0       |                  0.5%   |                  0.0%   [3]      
+4      _conv2_Conv_output_0          |||||||||         33.5%   ||||||||||||||||  41.8%   [4]      
+5      _relu2_Relu_output_0          |                  0.2%   |                  0.0%   [5]      
+6      _pool2_AveragePool_output_0   |                  0.2%   |                  0.0%   [6]      
+7      _flatten_Flatten_output_0     |                  0.0%   |                  0.0%   [7]      
+9      _relu3_Relu_output_0          |                  0.0%   |                  0.0%   [9]      
+------ ----------------------------- ------------------------- ------------------------- -------- 
+macc=219,957 weights=44,436 act=7,680 ram_io=0
+ 
+ Requested memory size by section - "stm32h5" target
+ ------------------------------- ------- -------- ------ ------- 
+ module                             text   rodata   data     bss 
+ ------------------------------- ------- -------- ------ ------- 
+ NetworkRuntime1020_CM33_GCC.a     3,856        0      0       0 
+ gesture_nn.o                      1,754       80    988      64 
+ lib (toolchain)*                      0        0      0       0 
+ ------------------------------- ------- -------- ------ ------- 
+ RT total**                        5,610       80    988      64 
+ ------------------------------- ------- -------- ------ ------- 
+ weights                               0   44,440      0       0 
+ activations                           0        0      0   7,680 
+ states                                0        0      0       0 
+ io                                    0        0      0       0 
+ ------------------------------- ------- -------- ------ ------- 
+ TOTAL                             5,610   44,520    988   7,744 
+ ------------------------------- ------- -------- ------ ------- 
+ *  toolchain objects (libm/libgcc*)
+ ** RT AI runtime objects (kernels+infrastructure)
+  
+  Summary - "stm32h5" target
+  ---------------------------------------------------
+               FLASH (ro)      %*   RAM (rw)       % 
+  ---------------------------------------------------
+  RT total          6,678   13.1%      1,052   12.0% 
+  ---------------------------------------------------
+  TOTAL            51,118              8,732         
+  ---------------------------------------------------
+  *  rt/total
+
+
+Generated files (5)
+---------------------------------------------------------------------------------------------------------------- 
+C:\Users\sdham\Documents\Work_Semicon\DigikeyMaker\EdgeSense\CODE\EdgeSense\X-CUBE-AI\App\gesture_nn_data.h      
+C:\Users\sdham\Documents\Work_Semicon\DigikeyMaker\EdgeSense\CODE\EdgeSense\X-CUBE-AI\App\gesture_nn_data.c      
+C:\Users\sdham\Documents\Work_Semicon\DigikeyMaker\EdgeSense\CODE\EdgeSense\X-CUBE-AI\App\gesture_nn.h           
+C:\Users\sdham\Documents\Work_Semicon\DigikeyMaker\EdgeSense\CODE\EdgeSense\X-CUBE-AI\App\gesture_nn.c           
+C:\Users\sdham\Documents\Work_Semicon\DigikeyMaker\EdgeSense\CODE\EdgeSense\X-CUBE-AI\App\gesture_nn_details.h   
